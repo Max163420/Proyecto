@@ -1,0 +1,47 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9); /* Fondo semitransparente */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+#powerUpSelection {
+    background-color: #87CEEB; /* Color de fondo igual al menú */
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+    transform: scale(1.1); /* Animación al pasar el mouse */
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    background-color: #87CEEB; /* Color de fondo del juego */
+    z-index: 1;
+}

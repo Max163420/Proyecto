@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scary Pug Super Parkour</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
+      background-color: black;
+    }
+
+    /* Pantallas emergentes (créditos e instrucciones) */
+    .overlayScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .overlayScreen h2 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    .overlayScreen p {
+      margin: 5px 0;
+    }
+
+    .overlayScreen button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .overlayScreen button:hover {
+      background-color: #45a049;
+    }
+
+    #menu {
+      width: 100vw;
+      height: 100vh;
+      background-image: url('menu-fondo.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      text-shadow: 2px 2px 4px #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #menu h1 {
+      font-size: 3em;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #00ff00;
+      margin-bottom: 20px;
+    }
+
+    #menu button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    #menu button:hover {
+      background-color: #45a049;
+      transform: scale(1.1); /* Animación al pasar el mouse */
+    }
+
+    #gameCanvas {
+      display: block;
+      margin: 0 auto;
+      background-color: #87CEEB; /* Color de fondo del juego */
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Menú Principal -->
+  <div id="menu">
+    <h1>Scary Pug Super Parkour</h1>
+    <button onclick="startGame()">Jugar</button>
+    <div id="powerUpSelection" class="centered" style="display: none;">
+        <h2>Selecciona tu Power-Up</h2>
+        <button onclick="selectPowerUp('shield')">Escudo</button>
+        <button onclick="selectPowerUp('doubleJump')">Doble Salto</button>
+    </div>
+    <button onclick="showHowToPlay()">¿Cómo jugar / Acerca de?</button>
+    <button onclick="showSettings()">Ajustes</button>
+    <button onclick="showCredits()">Créditos</button>
+  </div>
+
+  <!-- Pantalla de Créditos -->
+  <div id="creditsScreen" class="overlayScreen">
+    <h2>Créditos</h2>
+    <p><strong>Creado por:</strong> Max y Palafox</p>
+    <p><strong>Herramientas usadas:</strong> HTML, CSS, JavaScript</p>
+    <p><strong>Música:</strong> ULTRASONIC FAITH de Grace (Roblox)</p>
+    <p><strong>Sprites:</strong>Descargados de Google Chrome con un estilo animado y pixel art en 2d</p>
+    <p><strong>Inspiración:</strong> Juego del dinosaurio de Google</p>
+    <p><strong>Agradecimientos:</strong> A las personas que les gusto y a mi maestra por enseñarnos a programar en javascript</p>
+    <button onclick="hideCredits()">Cerrar</button>
+  </div>
+
+  <!-- Pantalla de Instrucciones -->
+  <div id="howToPlayScreen" class="overlayScreen">
+    <h2>¿Cómo jugar?</h2>
+    <p>Protege a Nina de un mundo peligroso y lleno de obstaculos.</p>
+    <p>Presiona <strong>espacio</strong> para saltar los obstaculos y recoger las monedas</p>
+    <p>Recoge monedas para ganar 10 puntos y super monedas para ganar 50 puntos</p>
+    <p>Evita obstáculos o perderás. Cada 100 puntos la velocidad aumenta haciendo mas dificl el juego.</p>
+    <p><strong>Consejos!:</strong></p>
+    <ul style="text-align: left; max-width: 400px;">
+      <p><strong>No seas codicioso!:</strong> Aunque las monedas llamen la atencion no siempre es seguro recogerlas, recogelas con cuidado sobretodo cuando vayas en un puntaje superior a 1000 o podria resultar en un game over.</p>
+
+      <p><strong>Calcula los saltos!:</strong>Calcula los saltos y trata de aprenderte la hitbox asi podras hacer saltos mas arriesgados sin resultar en un game over.</p>
+      
+      <p><strong>Diviertete:</strong> Este juego esta hecho por 1 sola persona y en 2 semanas, es para que superes tu puntaje y pruebes parte de tus habilidades, proximamente habra mas cambios y actualizaciones y no te frustres, tu puedes hacerlo!.</p>
+    </ul>
+    <button onclick="hideHowToPlay()">Cerrar</button>
+  </div>
+
+  <!-- Pantalla de Ajustes -->
+<div id="settingsScreen" class="overlayScreen">
+  <h2>Ajustes</h2>
+
+  <label for="volumeControl">Volumen del juego:</label>
+  <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1" />
+
+  <label style="margin-top: 20px;">
+    <input type="checkbox" id="showCollisionBox" />
+    Mostrar radio de colisión del personaje
+  </label>
+
+  <label style="margin-top: 20px;">Tecla de salto:
+    <select id="jumpKeySelector">
+      <option value="Space">Espacio</option>
+      <option value="ArrowUp">Flecha arriba</option>
+    </select>
+  </label>
+
+  <button onclick="hideSettings()">Cerrar</button>
+</div>
+
+  <div id="powerUpSelection" class="centered" style="display: none;">
+    <h2>Selecciona tu Power-Up</h2>
+    <button onclick="selectPowerUp('shield')">Escudo</button>
+    <button onclick="selectPowerUp('doubleJump')">Doble Salto</button>
+    <button onclick="selectPowerUp('dash')">Dash</button>
+  </div>
+
+  <div id="gameOverScreen" class="centered" style="display: none;">
+    <h2>Game Over</h2>
+    <button onclick="restartGame()">Reiniciar</button>
+  </div>
+
+  <div id="scoreboard">
+    <p id="score">Puntaje: 0</p>
+    <p id="highscore">Puntaje más alto: 0</p>
+  </div>
+  <canvas id="gameCanvas" width="800" height="400" tabindex="0"></canvas>
+  <audio id="backgroundMusic" src="grace-ost.mp3" loop></audio>
+
+ <script>
+  function showCredits() {
+    document.getElementById('creditsScreen').style.display = 'flex';
+  }
+
+  function hideCredits() {
+    document.getElementById('creditsScreen').style.display = 'none';
+  }
+
+  function showHowToPlay() {
+    document.getElementById('howToPlayScreen').style.display = 'flex';
+  }
+
+  function hideHowToPlay() {
+    document.getElementById('howToPlayScreen').style.display = 'none';
+  }
+
+  function showSettings() {
+    document.getElementById('settingsScreen').style.display = 'flex';
+  }
+
+  function hideSettings() {
+    document.getElementById('settingsScreen').style.display = 'none';
+  }
+
+  // Control de volumen
+  document.addEventListener("DOMContentLoaded", () => {
+    const volumeControl = document.getElementById("volumeControl");
+    const music = document.getElementById("backgroundMusic");
+    volumeControl.addEventListener("input", () => {
+      music.volume = volumeControl.value;
+    });
+  });
+</script>
+  <script src="Juego.js"></script>
+</body>
+</html>
